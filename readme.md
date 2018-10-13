@@ -8,7 +8,7 @@ Pull this package via Composer.
 ```json
     {
         "require": {
-            "becopay/php-payment-gateway": "0.*"
+            "becopay/Invoice_SDK_PHP": "0.*"
         }
     }
 ```
