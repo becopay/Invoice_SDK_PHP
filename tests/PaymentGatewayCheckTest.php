@@ -32,7 +32,7 @@ class PaymentGatewayCreateAndCheck extends TestCase
                 'apiKey' => $this->config->API_KEY,
                 'mobile' => $this->config->MOBILE,
                 'orderId' => (string)rand(),
-                'price' => '54166',
+                'price' => 54166,
                 'description' => 'test order',
                 'test' => 'Test create invoice and check invoice'
             )

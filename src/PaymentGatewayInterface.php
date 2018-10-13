@@ -27,7 +27,7 @@ interface PaymentGatewayInterface
 
     /**
      * Create the payment invoice and return the gateway url
-     * @param  string $orderId
+     * @param  string | integer $orderId
      * @param integer $price
      * @param string $description
      * @return object

@@ -68,8 +68,8 @@ class PaymentGateway implements PaymentGatewayInterface
     /**
      * Create the payment invoice and return the gateway url
      *
-     * @param  string $orderId
-     * @param string  $price
+     * @param  string | integer $orderId
+     * @param integer  $price
      * @param string  $description
      * @return mixed bool | object
      * @throws \Exception
@@ -80,16 +80,16 @@ class PaymentGateway implements PaymentGatewayInterface
          * Check value is string
          * If string is invalid throw the exception
          */
-        self::__validateString($orderId,50);
-        self::__validateString($price,20);
+        self::__validateString((string)$orderId,50);
+        self::__validateInteger($price,20);
         self::__validateString($description,255);
 
         $param = array(
             "apiKey" => $this->apiKey,
             "mobile" => $this->mobile,
             "description" => $description,
-            "orderId" => $orderId,
-            "price" => $price
+            "orderId" => (string)$orderId,
+            "price" => (string)$price
         );
 
         // Clear the error variable
@@ -230,6 +230,23 @@ class PaymentGateway implements PaymentGatewayInterface
         if (!is_string($string))
             throw new \Exception('parameter is not string');
         if($length > 0 && strlen($string) > $length)
+            throw new \Exception('parameter is too long');
+        return true;
+    }
+
+    /**
+     * validate the integer
+     *
+     * @param $int
+     * @param $length
+     * @return bool
+     * @throws \Exception
+     */
+    private function __validateInteger($int,$length = 0)
+    {
+        if (!is_int($int))
+            throw new \Exception('parameter is not integer');
+        if($length > 0 && strlen($int) > $length)
             throw new \Exception('parameter is too long');
         return true;
     }

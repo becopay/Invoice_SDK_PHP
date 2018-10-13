@@ -32,7 +32,7 @@ class PaymentGatewayCreateTest extends TestCase
                 'apiKey' => 'apikey', //The parameter is being tested
                 'mobile' => $this->config->MOBILE,
                 'orderId' => '4988849849',
-                'price' => '54166',
+                'price' => 54166,
                 'description' => 'test order',
                 'isAssertion' => false,
                 'test' => 'Test invalid api key'
@@ -43,7 +43,7 @@ class PaymentGatewayCreateTest extends TestCase
                 'apiKey' => $this->config->API_KEY,
                 'mobile' => '09100000', //The parameter is being tested
                 'orderId' => '4988849849',
-                'price' => '54166',
+                'price' => 54166,
                 'description' => 'test order',
                 'isAssertion' => false,
                 'test' => 'Test invalid mobile'
@@ -54,7 +54,7 @@ class PaymentGatewayCreateTest extends TestCase
                 'apiKey' => $this->config->API_KEY,
                 'mobile' => '09100000',
                 'orderId' => '4988849849',
-                'price' => '54166',
+                'price' => 54166,
                 'description' => 'test order',
                 'isAssertion' => false,
                 'test' => 'Test invalid api url'
@@ -65,7 +65,7 @@ class PaymentGatewayCreateTest extends TestCase
                 'apiKey' => $this->config->API_KEY,
                 'mobile' => '09100000',
                 'orderId' => '21245154843156463135468435165434654456468434684664681', //The parameter is being tested
-                'price' => '54166',
+                'price' => 54166,
                 'description' => 'test order',
                 'isAssertion' => false,
                 'test' => 'Test $orderId parameter with more than 50 character'
@@ -76,7 +76,7 @@ class PaymentGatewayCreateTest extends TestCase
                 'apiKey' => $this->config->API_KEY,
                 'mobile' => '09100000',
                 'orderId' => '21245154',
-                'price' => '12545658754125485321554',//The parameter is being tested
+                'price' => 12545658754125485321554,//The parameter is being tested
                 'description' => 'test order',
                 'isAssertion' => false,
                 'test' => 'Test $orderId parameter with more than 20 character'
@@ -87,7 +87,7 @@ class PaymentGatewayCreateTest extends TestCase
                 'apiKey' => $this->config->API_KEY,
                 'mobile' => '09100000',
                 'orderId' => '21245154',
-                'price' => '12545658754125485321554',
+                'price' => 1254565875,
                 'description' => 'test order,test ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest order', //The parameter is being tested
                 'isAssertion' => false,
                 'test' => 'Test $description parameter with more than 255 character'
@@ -97,8 +97,8 @@ class PaymentGatewayCreateTest extends TestCase
                 'apiBaseUrl' => $this->config->API_BASE_URL,
                 'apiKey' => $this->config->API_KEY,
                 'mobile' => $this->config->MOBILE,
-                'orderId' => (string)rand(),
-                'price' => '54166',
+                'orderId' => rand(),
+                'price' => 4166,
                 'description' => 'test order',
                 'isAssertion' => true,
                 'test' => 'Test create invoice'

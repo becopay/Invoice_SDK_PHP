@@ -33,7 +33,7 @@ class PaymentGatewayCheckTest extends TestCase
                 'apiKey' => $this->config->API_KEY,
                 'mobile' => '09100000',
                 'orderId' => '21245154843156463135468435165434654456468434684664681',
-                'price' => '54166',
+                'price' => 54166,
                 'description' => 'test order',
                 'isAssertion' => false,
                 'test' => 'Test $orderId parameter with more than 50 character'
