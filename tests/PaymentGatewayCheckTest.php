@@ -1,7 +1,7 @@
 <?php
 /**
  * User: Becopay Team
- * Version 0.0.1
+ * Version 1.0.0
  * Date: 10/10/18
  * Time: 10:36 AM
  */
