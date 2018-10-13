@@ -16,8 +16,6 @@ namespace Becopay;
  */
 interface PaymentGatewayInterface
 {
-
-
     /**
      * PaymentGatewayInterface constructor.
      *

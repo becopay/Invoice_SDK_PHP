@@ -187,6 +187,7 @@ class PaymentGateway implements PaymentGatewayInterface
         $context = stream_context_create($opts);
         $result = file_get_contents($url, false, $context);
 
+        //get http status code
         $httpCode = (int)(explode(' ', $http_response_header[0]))[1];
 
 
