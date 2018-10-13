@@ -1,8 +1,8 @@
 {
-    "name": "becopay/Invoice_SDK_PHP",
+    "name": "becopay/invoice_sdk_php",
     "description": "Becopay payment gateway api php library",
     "keywords": ["payment"],
-    "homepage": "https://github.com/becopay/Invoice_SDK_PHP/",
+    "homepage": "https://github.com/becopay/invoice_sdk_php/",
     "version": "0.0.1",
     "type": "library",
     "require": {
@@ -16,7 +16,7 @@
         }
     ],
     "support": {
-      "issues": "https://github.com/becopay/Invoice_SDK_PHP/issues"
+      "issues": "https://github.com/becopay/invoice_sdk_php/issues"
     },
     "minimum-stability": "dev",
     "autoload": {
