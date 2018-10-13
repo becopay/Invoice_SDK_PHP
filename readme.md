@@ -48,7 +48,7 @@ try {
      * This function is used to create an invoice.
      * Return result data type is object
      */ 
-    $invoice = $payment->create('order id','price','description');
+    $invoice = $payment->create('order id','price','descriptiom');
     if($invoice)
     {
         /*
@@ -66,10 +66,10 @@ try {
        		echo 'invoice id:'.$invoiceId.'<br>';
         */
 
-        //Get redirect url
+        //Get gateway url
         /*
-        	$redirectUrl = $invoice->redirectUrl;
-        	echo 'redirect url'.$invoiceId.'<br>';
+        	$redirectUrl = $invoice->gatewayUrl;
+        	echo 'gateway url'.$invoiceId.'<br>';
         */
     }else{
     	//Add your error handling
