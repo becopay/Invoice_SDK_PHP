@@ -8,12 +8,12 @@ Pull this package via Composer.
 ```json
     {
         "require": {
-            "becopay/Invoice_SDK_PHP": "1.*"
+            "becopay/invoice_sdk_php": "1.*"
         }
     }
 ```
 
-or run in terminal: ```composer require becopay/Invoice_SDK_PHP```
+or run in terminal: ```composer require becopay/invoice_sdk_php```
 
 
 ### Usage
