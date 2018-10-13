@@ -29,7 +29,7 @@ class PaymentGatewayCheckTest extends TestCase
 
             //Test $orderId parameter with more than 50 character
             array(
-                'apiUrl' => 'http://localhost', //The parameter is being tested
+                'apiBaseUrl' => 'http://localhost', //The parameter is being tested
                 'apiKey' => $this->config->API_KEY,
                 'mobile' => '09100000',
                 'orderId' => '21245154843156463135468435165434654456468434684664681',
@@ -53,7 +53,7 @@ class PaymentGatewayCheckTest extends TestCase
         foreach (self::dataSet() as $key => $data) {
             try {
                 $payment = new PaymentGateway(
-                    $data['apiUrl'],
+                    $data['apiBaseUrl'],
                     $data['apiKey'],
                     $data['mobile']
                 );

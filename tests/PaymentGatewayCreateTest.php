@@ -28,7 +28,7 @@ class PaymentGatewayCreateTest extends TestCase
         return $dataSet = array(
             // Test invalid api key
             array(
-                'apiUrl' => $this->config->API_URL,
+                'apiBaseUrl' => $this->config->API_BASE_URL,
                 'apiKey' => 'apikey', //The parameter is being tested
                 'mobile' => $this->config->MOBILE,
                 'orderId' => '4988849849',
@@ -39,7 +39,7 @@ class PaymentGatewayCreateTest extends TestCase
             ),
             //Test invalid mobile
             array(
-                'apiUrl' => $this->config->API_URL,
+                'apiBaseUrl' => $this->config->API_BASE_URL,
                 'apiKey' => $this->config->API_KEY,
                 'mobile' => '09100000', //The parameter is being tested
                 'orderId' => '4988849849',
@@ -48,9 +48,9 @@ class PaymentGatewayCreateTest extends TestCase
                 'isAssertion' => false,
                 'test' => 'Test invalid mobile'
             ),
-            //Test invalid api url
+            //Test invalid api base url
             array(
-                'apiUrl' => 'http://localhost', //The parameter is being tested
+                'apiBaseUrl' => 'http://localhost', //The parameter is being tested
                 'apiKey' => $this->config->API_KEY,
                 'mobile' => '09100000',
                 'orderId' => '4988849849',
@@ -61,10 +61,10 @@ class PaymentGatewayCreateTest extends TestCase
             ),
             //Test $orderId parameter with more than 50 character
             array(
-                'apiUrl' => 'http://localhost', //The parameter is being tested
+                'apiBaseUrl' => 'http://localhost',
                 'apiKey' => $this->config->API_KEY,
                 'mobile' => '09100000',
-                'orderId' => '21245154843156463135468435165434654456468434684664681',
+                'orderId' => '21245154843156463135468435165434654456468434684664681', //The parameter is being tested
                 'price' => '54166',
                 'description' => 'test order',
                 'isAssertion' => false,
@@ -72,29 +72,29 @@ class PaymentGatewayCreateTest extends TestCase
             ),
             //Test $price parameter with more than 20 character
             array(
-                'apiUrl' => 'http://localhost', //The parameter is being tested
+                'apiBaseUrl' => 'http://localhost',
                 'apiKey' => $this->config->API_KEY,
                 'mobile' => '09100000',
                 'orderId' => '21245154',
-                'price' => '12545658754125485321554',
+                'price' => '12545658754125485321554',//The parameter is being tested
                 'description' => 'test order',
                 'isAssertion' => false,
                 'test' => 'Test $orderId parameter with more than 20 character'
             ),
             //Test $description parameter with more than 255 character
             array(
-                'apiUrl' => 'http://localhost', //The parameter is being tested
+                'apiBaseUrl' => 'http://localhost',
                 'apiKey' => $this->config->API_KEY,
                 'mobile' => '09100000',
                 'orderId' => '21245154',
                 'price' => '12545658754125485321554',
-                'description' => 'test order,test ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest order',
+                'description' => 'test order,test ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest order', //The parameter is being tested
                 'isAssertion' => false,
                 'test' => 'Test $description parameter with more than 255 character'
             ),
             //Test create invoice
             array(
-                'apiUrl' => $this->config->API_URL,
+                'apiBaseUrl' => $this->config->API_BASE_URL,
                 'apiKey' => $this->config->API_KEY,
                 'mobile' => $this->config->MOBILE,
                 'orderId' => (string)rand(),
@@ -118,7 +118,7 @@ class PaymentGatewayCreateTest extends TestCase
         foreach (self::dataSet() as $key => $data) {
             try {
                 $payment = new PaymentGateway(
-                    $data['apiUrl'],
+                    $data['apiBaseUrl'],
                     $data['apiKey'],
                     $data['mobile']
                 );

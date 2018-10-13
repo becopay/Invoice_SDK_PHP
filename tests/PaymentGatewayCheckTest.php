@@ -28,7 +28,7 @@ class PaymentGatewayCreateAndCheck extends TestCase
         return $dataSet = array(
             //Test create invoice and check invoice
             array(
-                'apiUrl' => $this->config->API_URL,
+                'apiBaseUrl' => $this->config->API_BASE_URL,
                 'apiKey' => $this->config->API_KEY,
                 'mobile' => $this->config->MOBILE,
                 'orderId' => (string)rand(),
@@ -51,7 +51,7 @@ class PaymentGatewayCreateAndCheck extends TestCase
         foreach (self::dataSet() as $key => $data) {
             try {
                 $payment = new PaymentGateway(
-                    $data['apiUrl'],
+                    $data['apiBaseUrl'],
                     $data['apiKey'],
                     $data['mobile']
                 );

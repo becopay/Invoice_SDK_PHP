@@ -19,11 +19,11 @@ interface PaymentGatewayInterface
     /**
      * PaymentGatewayInterface constructor.
      *
-     * @param string $apiUrl payment gateway api base url
+     * @param string $apiBaseUrl payment gateway api base url
      * @param string $apiKey payment gateway api key
      * @param string $mobile merchant mobile number
      */
-    public function __construct($apiUrl,$apiKey,$mobile);
+    public function __construct($apiBaseUrl,$apiKey,$mobile);
 
     /**
      * Create the payment invoice and return the gateway url

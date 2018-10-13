@@ -20,7 +20,7 @@ class PaymentGateway implements PaymentGatewayInterface
     /**
      * @var string payment gateway api base url
      */
-    private $apiUrl;
+    private $apiBaseUrl;
 
     /**
      * @var string payment gateway api key
@@ -40,18 +40,18 @@ class PaymentGateway implements PaymentGatewayInterface
     /**
      * PaymentGateway constructor.
      *
-     * @param string $apiUrl
+     * @param string $apiBaseUrl
      * @param string $apiKey
      * @param string $mobile merchant mobile number
      * @throws \Exception
      */
-    public function __construct($apiUrl, $apiKey, $mobile)
+    public function __construct($apiBaseUrl, $apiKey, $mobile)
     {
         /*
          * validate the url
          * If url is invalid throw the exception
          */
-        self::__validateUrl($apiUrl);
+        self::__validateUrl($apiBaseUrl);
 
         /*
          * Check value is string
@@ -60,7 +60,7 @@ class PaymentGateway implements PaymentGatewayInterface
         self::__validateString($apiKey,100);
         self::__validateString($mobile,15);
 
-        $this->apiUrl = trim($apiUrl);
+        $this->apiBaseUrl = trim($apiBaseUrl);
         $this->apiKey = trim($apiKey);
         $this->mobile = trim($mobile);
     }
@@ -166,7 +166,7 @@ class PaymentGateway implements PaymentGatewayInterface
      */
     private function __sendRequest($urlPath, $method, $param)
     {
-        $url = trim($this->apiUrl, '/') . '/' . trim($urlPath, '/');
+        $url = trim($this->apiBaseUrl, '/') . '/' . trim($urlPath, '/');
 
         if ($method == 'GET') {
             $query = http_build_query($param);
@@ -221,14 +221,15 @@ class PaymentGateway implements PaymentGatewayInterface
      * validate the string
      *
      * @param $string
+     * @param $length
      * @return bool
      * @throws \Exception
      */
-    private function __validateString($string,$lenghth = 0)
+    private function __validateString($string,$length = 0)
     {
         if (!is_string($string))
             throw new \Exception('parameter is not string');
-        if($lenghth > 0 && strlen($string) > $lenghth)
+        if($length > 0 && strlen($string) > $length)
             throw new \Exception('parameter is too long');
         return true;
     }
