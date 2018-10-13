@@ -173,30 +173,26 @@ class PaymentGateway implements PaymentGatewayInterface
             $url = $url . '?' . $query;
         }
 
-        $curl = curl_init();
+        $opts = array('http' =>
+            array(
+                'method' => $method,
+                'timeout'=>'30',
+                'max_redirects'=>'10',
+                'ignore_errors'=>'1',
+                'header' => 'Content-type: application/json',
+                'content' => $method == 'POST' ? json_encode($param) : ''
+            )
+        );
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_CUSTOMREQUEST => $method,
-            CURLOPT_POSTFIELDS => $method == 'POST' ? json_encode($param) : '',
-            CURLOPT_HTTPHEADER => array(
-                "Cache-Control: no-cache",
-                "Content-Type: application/json",
-            ),
-        ));
+        $context = stream_context_create($opts);
+        $result = file_get_contents($url, false, $context);
 
-        $response = curl_exec($curl);
-        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        $error = curl_error($curl);
+        $httpCode = (int)(explode(' ', $http_response_header[0]))[1];
 
-        curl_close($curl);
 
         return (object)array(
             'code' => $httpCode,
-            'response' => $error ? $error : json_decode($response),
+            'response' => json_decode($result),
         );
     }
 
