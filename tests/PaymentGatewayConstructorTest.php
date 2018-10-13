@@ -68,7 +68,7 @@ class PaymentGatewayConstructorTest extends TestCase
             'apiUrl' => 'https://api.com:8080', //The parameter is being tested
             'apiKey' => 'apikey',
             'mobile' => '09100000000',
-            'isAssertion' => false,
+            'isAssertion' => true,
             'test'=>'Test $apiUrl parameter with port'
         ),
         // Test $apiUrl parameter with Ip
@@ -93,7 +93,6 @@ class PaymentGatewayConstructorTest extends TestCase
         // Test $apiKey parameter with null value
         array(
             'apiUrl' => 'https://api.url',
-            'gatewayUrl' => 'https://gateway.url',
             'apiKey' => null, //The parameter is being tested
             'mobile' => '09100000000',
             'isAssertion' => false,
@@ -102,19 +101,25 @@ class PaymentGatewayConstructorTest extends TestCase
         // Test $apiKey parameter with other type of value
         array(
             'apiUrl' => 'https://api.url',
-            'gatewayUrl' => 'https://gateway.url',
             'apiKey' => 13165465, //The parameter is being tested
             'mobile' => '09100000000',
             'isAssertion' => false,
             'test'=>'Test $apiKey parameter with other type of value'
         ),
+        // Test $apiKey parameter with more than 100 character
+        array(
+            'apiUrl' => 'https://api.url',
+            'apiKey' => 'B8B8$%%^93905A34$98B3FB82@!kF8BF37ED&&&4AB8939;0@5B822U%#BB93^8B3#0CWE45FEE5EQ^$*DFG%$!6GHJ6ES646544545640', //The parameter is being tested
+            'mobile' => '09100000000',
+            'isAssertion' => false,
+            'test'=>'Test $apiKey parameter with more than 100 character'
+        ),
         ///////////////////////////////////////////////
         /// Test $mobile
         ///
-        // Test $apiKey parameter with null value
+        // Test $mobile parameter with null value
         array(
             'apiUrl' => 'https://api.url',
-            'gatewayUrl' => 'https://gateway.url',
             'apiKey' => 'api key',
             'mobile' => null, //The parameter is being tested
             'isAssertion' => false,
@@ -123,11 +128,18 @@ class PaymentGatewayConstructorTest extends TestCase
         // Test $mobile parameter with other type of value
         array(
             'apiUrl' => 'https://api.url',
-            'gatewayUrl' => 'https://gateway.url',
             'apiKey' => 'api key',
             'mobile' => 13165465, //The parameter is being tested
             'isAssertion' => false,
             'test'=>'Test $mobile parameter with other type of value'
+        ),
+        // Test $mobile parameter with more than 15 character
+        array(
+            'apiUrl' => 'https://api.url',
+            'apiKey' => 'api key',
+            'mobile' => '0910000005689574', //The parameter is being tested
+            'isAssertion' => false,
+            'test'=>'Test $mobile parameter with more than 15 character'
         ),
     );
 

@@ -57,8 +57,40 @@ class PaymentGatewayCreateTest extends TestCase
                 'price' => '54166',
                 'description' => 'test order',
                 'isAssertion' => false,
-                'isAssertionCode' => 200,
                 'test' => 'Test invalid api url'
+            ),
+            //Test $orderId parameter with more than 50 character
+            array(
+                'apiUrl' => 'http://localhost', //The parameter is being tested
+                'apiKey' => $this->config->API_KEY,
+                'mobile' => '09100000',
+                'orderId' => '21245154843156463135468435165434654456468434684664681',
+                'price' => '54166',
+                'description' => 'test order',
+                'isAssertion' => false,
+                'test' => 'Test $orderId parameter with more than 50 character'
+            ),
+            //Test $price parameter with more than 20 character
+            array(
+                'apiUrl' => 'http://localhost', //The parameter is being tested
+                'apiKey' => $this->config->API_KEY,
+                'mobile' => '09100000',
+                'orderId' => '21245154',
+                'price' => '12545658754125485321554',
+                'description' => 'test order',
+                'isAssertion' => false,
+                'test' => 'Test $orderId parameter with more than 20 character'
+            ),
+            //Test $description parameter with more than 255 character
+            array(
+                'apiUrl' => 'http://localhost', //The parameter is being tested
+                'apiKey' => $this->config->API_KEY,
+                'mobile' => '09100000',
+                'orderId' => '21245154',
+                'price' => '12545658754125485321554',
+                'description' => 'test order,test ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest ordertest order',
+                'isAssertion' => false,
+                'test' => 'Test $description parameter with more than 255 character'
             ),
             //Test create invoice
             array(
@@ -97,7 +129,12 @@ class PaymentGatewayCreateTest extends TestCase
                 $this->assertTrue(!empty($result) == $data['isAssertion']);
 
             } catch (\Exception $e) {
-                $this->assertTrue(false, 'dataSet number ' . $key . ' is not passed,' . $e->getMessage());
+                if ($data['isAssertion'])
+                    $this->assertTrue(false, 'dataSet number ' . $key . ' is not passed,' . $e->getMessage());
+                else {
+                    echo "\n" . $key . ' : ' . $data['test'];
+                    $this->assertTrue(true);
+                }
             }
 
         }

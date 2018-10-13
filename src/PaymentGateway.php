@@ -55,10 +55,10 @@ class PaymentGateway implements PaymentGatewayInterface
 
         /*
          * Check value is string
-         * If url is invalid throw the exception
+         * If string is invalid throw the exception
          */
-        self::__isString($apiKey);
-        self::__isString($mobile);
+        self::__validateString($apiKey,100);
+        self::__validateString($mobile,15);
 
         $this->apiUrl = trim($apiUrl);
         $this->apiKey = trim($apiKey);
@@ -78,11 +78,11 @@ class PaymentGateway implements PaymentGatewayInterface
     {
         /*
          * Check value is string
-         * If url is invalid throw the exception
+         * If string is invalid throw the exception
          */
-        self::__isString($orderId);
-        self::__isString($price);
-        self::__isString($description);
+        self::__validateString($orderId,50);
+        self::__validateString($price,20);
+        self::__validateString($description,255);
 
         $param = array(
             "apiKey" => $this->apiKey,
@@ -126,9 +126,9 @@ class PaymentGateway implements PaymentGatewayInterface
     {
         /*
          * Check value is string
-         * If url is invalid throw the exception
+         * If string is invalid throw the exception
          */
-        self::__isString($invoiceId);
+        self::__validateString($invoiceId,50);
 
         $param = array(
             "id" => $invoiceId
@@ -224,10 +224,12 @@ class PaymentGateway implements PaymentGatewayInterface
      * @return bool
      * @throws \Exception
      */
-    private function __isString($string)
+    private function __validateString($string,$lenghth = 0)
     {
         if (!is_string($string))
             throw new \Exception('parameter is not string');
+        if($lenghth > 0 && strlen($string) > $lenghth)
+            throw new \Exception('parameter is too long');
         return true;
     }
 
