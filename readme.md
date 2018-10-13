@@ -119,16 +119,23 @@ try {
       $invoiceId = $invoice->id; // this code is for test. you must get invoice id form 
 
 
-      $invoiceStatus = $payment->check($invoice->id);
+      $fetchedInvoice = $payment->check($invoice->id);
       
-      if($invoiceStatus)
+      if($fetchedInvoice)
       {
       	/*
          * Insert your code here for updating order status
          */
-      
+    	if($fetchedInvoice->status == "success")
+        {
+        	// success msg
+        }else{
+        	//error msg
+        }
+        
+        
 		//echo the result
-      	echo json_encode($invoiceStatus);
+      	echo json_encode($fetchedInvoice);
         
         
       }else{
