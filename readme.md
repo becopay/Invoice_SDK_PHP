@@ -8,12 +8,12 @@ Pull this package via Composer.
 ```json
     {
         "require": {
-            "becopay/Invoice_SDK_PHP": "0.*"
+            "becopay/invoice_sdk_php": "1.*"
         }
     }
 ```
 
-or run in terminal: ```composer require becopay/Invoice_SDK_PHP```
+or run in terminal: ```composer require becopay/invoice_sdk_php```
 
 
 ### Usage
@@ -66,10 +66,10 @@ try {
        		echo 'invoice id:'.$invoiceId.'<br>';
         */
 
-        //Get redirect url
+        //Get gateway url
         /*
-        	$redirectUrl = $invoice->redirectUrl;
-        	echo 'redirect url'.$invoiceId.'<br>';
+        	$redirectUrl = $invoice->gatewayUrl;
+        	echo 'gateway url'.$invoiceId.'<br>';
         */
     }else{
     	//Add your error handling
@@ -111,15 +111,13 @@ If response is successful it will return object and if not, it will return false
        */
 try {
       /*
-       * Get invoice id 
-       * This function is used on your callback function,
-       * so for using your invoice id, you must have saved invoice id
-       * while creating the invoice
+       * This function will be used on your callback page or when you want to check the invoice status
+       * first you must get orderId from path or querystring using $_GET
+       * then find related becopay Invoice id from your database
+       * and use it to check the invoice status
        */
-      $invoiceId = $invoice->id; // this code is for test. you must get invoice id form 
-
-
-      $fetchedInvoice = $payment->check($invoice->id);
+    
+      $fetchedInvoice = $payment->check($invoiceId);
       
       if($fetchedInvoice)
       {

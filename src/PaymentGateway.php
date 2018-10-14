@@ -1,7 +1,7 @@
 <?php
 /**
  * User: Becopay Team
- * Version 0.0.1
+ * Version 1.0.0
  * Date: 10/10/18
  * Time: 10:36 AM
  */
@@ -20,7 +20,7 @@ class PaymentGateway implements PaymentGatewayInterface
     /**
      * @var string payment gateway api base url
      */
-    private $apiUrl;
+    private $apiBaseUrl;
 
     /**
      * @var string payment gateway api key
@@ -40,27 +40,27 @@ class PaymentGateway implements PaymentGatewayInterface
     /**
      * PaymentGateway constructor.
      *
-     * @param string $apiUrl
+     * @param string $apiBaseUrl
      * @param string $apiKey
      * @param string $mobile merchant mobile number
      * @throws \Exception
      */
-    public function __construct($apiUrl, $apiKey, $mobile)
+    public function __construct($apiBaseUrl, $apiKey, $mobile)
     {
         /*
          * validate the url
          * If url is invalid throw the exception
          */
-        self::__validateUrl($apiUrl);
+        self::__validateUrl($apiBaseUrl);
 
         /*
          * Check value is string
-         * If url is invalid throw the exception
+         * If string is invalid throw the exception
          */
-        self::__isString($apiKey);
-        self::__isString($mobile);
+        self::__validateString($apiKey,100);
+        self::__validateString($mobile,15);
 
-        $this->apiUrl = trim($apiUrl);
+        $this->apiBaseUrl = trim($apiBaseUrl);
         $this->apiKey = trim($apiKey);
         $this->mobile = trim($mobile);
     }
@@ -68,8 +68,8 @@ class PaymentGateway implements PaymentGatewayInterface
     /**
      * Create the payment invoice and return the gateway url
      *
-     * @param  string $orderId
-     * @param string  $price
+     * @param  string | integer $orderId
+     * @param integer  $price
      * @param string  $description
      * @return mixed bool | object
      * @throws \Exception
@@ -78,18 +78,18 @@ class PaymentGateway implements PaymentGatewayInterface
     {
         /*
          * Check value is string
-         * If url is invalid throw the exception
+         * If string is invalid throw the exception
          */
-        self::__isString($orderId);
-        self::__isString($price);
-        self::__isString($description);
+        self::__validateString((string)$orderId,50);
+        self::__validateInteger($price,20);
+        self::__validateString($description,255);
 
         $param = array(
             "apiKey" => $this->apiKey,
             "mobile" => $this->mobile,
             "description" => $description,
-            "orderId" => $orderId,
-            "price" => $price
+            "orderId" => (string)$orderId,
+            "price" => (string)$price
         );
 
         // Clear the error variable
@@ -126,9 +126,9 @@ class PaymentGateway implements PaymentGatewayInterface
     {
         /*
          * Check value is string
-         * If url is invalid throw the exception
+         * If string is invalid throw the exception
          */
-        self::__isString($invoiceId);
+        self::__validateString($invoiceId,50);
 
         $param = array(
             "id" => $invoiceId
@@ -166,7 +166,7 @@ class PaymentGateway implements PaymentGatewayInterface
      */
     private function __sendRequest($urlPath, $method, $param)
     {
-        $url = trim($this->apiUrl, '/') . '/' . trim($urlPath, '/');
+        $url = trim($this->apiBaseUrl, '/') . '/' . trim($urlPath, '/');
 
         if ($method == 'GET') {
             $query = http_build_query($param);
@@ -221,13 +221,33 @@ class PaymentGateway implements PaymentGatewayInterface
      * validate the string
      *
      * @param $string
+     * @param $length
      * @return bool
      * @throws \Exception
      */
-    private function __isString($string)
+    private function __validateString($string,$length = 0)
     {
         if (!is_string($string))
             throw new \Exception('parameter is not string');
+        if($length > 0 && strlen($string) > $length)
+            throw new \Exception('parameter is too long');
+        return true;
+    }
+
+    /**
+     * validate the integer
+     *
+     * @param $int
+     * @param $length
+     * @return bool
+     * @throws \Exception
+     */
+    private function __validateInteger($int,$length = 0)
+    {
+        if (!is_int($int))
+            throw new \Exception('parameter is not integer');
+        if($length > 0 && strlen($int) > $length)
+            throw new \Exception('parameter is too long');
         return true;
     }
 

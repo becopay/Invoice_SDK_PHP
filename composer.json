@@ -3,12 +3,12 @@
     "description": "Becopay payment gateway api php library",
     "keywords": ["payment"],
     "homepage": "https://github.com/becopay/invoice_sdk_php/",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "type": "library",
     "require": {
         "php": ">=5.3.0"
     },
-    "license": "Apache License 2.0",
+    "license": "Apache-2.0",
     "authors": [
         {
             "name": "becopay team",
