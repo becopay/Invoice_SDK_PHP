@@ -48,7 +48,7 @@ try {
      * This function is used to create an invoice.
      * Return result data type is object
      */ 
-    $invoice = $payment->create('order id','price','descriptiom');
+    $invoice = $payment->create('order id','price','description');
     if($invoice)
     {
         /*
