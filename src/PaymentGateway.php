@@ -178,8 +178,6 @@ class PaymentGateway implements PaymentGatewayInterface
         //throw exception if none of them is enable
         else
             throw new \Exception('file_get_content and curl are disabled. you must enabled one of them');
-
-
     }
 
     /**
