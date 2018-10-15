@@ -200,7 +200,6 @@ class PaymentGateway implements PaymentGatewayInterface
         }
 
         $curl = curl_init();
-
         curl_setopt_array($curl, array(
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
@@ -217,7 +216,6 @@ class PaymentGateway implements PaymentGatewayInterface
         $response = curl_exec($curl);
         $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         $error = curl_error($curl);
-
         curl_close($curl);
 
         return (object)array(
