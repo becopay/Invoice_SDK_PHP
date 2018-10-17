@@ -76,11 +76,22 @@ class PaymentGateway implements PaymentGatewayInterface
      */
     public function create($orderId, $price, $description)
     {
+
+        // Clear the error variable
+        $this->error = '';
+
+        if ((float)$price == 0) {
+            $this->error = 'price value is 0 or invalid format';
+            return false;
+        }
+
+        $orderId = (string)$orderId;
+
         /*
          * Check value is string
          * If string is invalid throw the exception
          */
-        self::__validateString((string)$orderId, 50);
+        self::__validateString($orderId, 50);
         self::__validateInteger($price, 20);
         self::__validateString($description, 255);
 
@@ -88,12 +99,9 @@ class PaymentGateway implements PaymentGatewayInterface
             "apiKey" => $this->apiKey,
             "mobile" => $this->mobile,
             "description" => $description,
-            "orderId" => (string)$orderId,
+            "orderId" => $orderId,
             "price" => (string)$price
         );
-
-        // Clear the error variable
-        $this->error = '';
 
         $result = self::__sendRequest('invoice', 'POST', $param);
 
@@ -109,8 +117,11 @@ class PaymentGateway implements PaymentGatewayInterface
             $this->error = $result->response;
             return false;
         } else { //Get error massage and return false
-            if (isset($result->response->description))
+            if (isset($result->response->description) && !is_null($result->response->description))
                 $this->error = $result->response->description;
+            else if(isset($result->response->message) && !is_null($result->response->message))
+                $this->error = $result->response->message;
+
             return false;
         }
     }
@@ -255,7 +266,8 @@ class PaymentGateway implements PaymentGatewayInterface
         $result = file_get_contents($url, false, $context);
 
         //get http status code
-        $httpCode = (int)(explode(' ', $http_response_header[0]))[1];
+        $response_header = explode(' ', $http_response_header[0]);
+        $httpCode = (int)$response_header[1];
 
 
         return (object)array(
