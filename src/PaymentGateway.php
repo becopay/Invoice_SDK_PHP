@@ -48,17 +48,16 @@ class PaymentGateway implements PaymentGatewayInterface
     public function __construct($apiBaseUrl, $apiKey, $mobile)
     {
         /*
-         * validate the url
-         * If url is invalid throw the exception
+         * validate the url &&  Check value is string
+         * If is invalid url or is not string value throw the exception
          */
-        self::__validateUrl($apiBaseUrl);
+        if (
+            !self::__validateUrl($apiBaseUrl) ||
+            !self::__validateString($apiKey, 1, 100) ||
+            !self::__validateString($mobile, 3, 15)
+        )
+            throw new \Exception($this->error);
 
-        /*
-         * Check value is string
-         * If string is invalid throw the exception
-         */
-        self::__validateString($apiKey, 100);
-        self::__validateString($mobile, 15);
 
         $this->apiBaseUrl = trim($apiBaseUrl);
         $this->apiKey = trim($apiKey);
@@ -80,20 +79,18 @@ class PaymentGateway implements PaymentGatewayInterface
         // Clear the error variable
         $this->error = '';
 
-        if ((float)$price == 0) {
-            $this->error = 'price value is 0 or invalid format';
-            return false;
-        }
-
         $orderId = (string)$orderId;
 
         /*
          * Check value is string
-         * If string is invalid throw the exception
+         * If string or integer is invalid throw the exception
          */
-        self::__validateString($orderId, 50);
-        self::__validateInteger($price, 20);
-        self::__validateString($description, 255);
+        if (
+            !self::__validateString($orderId, 1, 50) ||
+            !self::__validateInteger($price, 1, 20) ||
+            !self::__validateString($description, 0, 255)
+        )
+            return false;
 
         $param = array(
             "apiKey" => $this->apiKey,
@@ -119,7 +116,7 @@ class PaymentGateway implements PaymentGatewayInterface
         } else { //Get error massage and return false
             if (isset($result->response->description) && !is_null($result->response->description))
                 $this->error = $result->response->description;
-            else if(isset($result->response->message) && !is_null($result->response->message))
+            else if (isset($result->response->message) && !is_null($result->response->message))
                 $this->error = $result->response->message;
 
             return false;
@@ -282,7 +279,6 @@ class PaymentGateway implements PaymentGatewayInterface
      *
      * @param $url
      * @return bool
-     * @throws \Exception
      */
     private function __validateUrl($url)
     {
@@ -290,7 +286,8 @@ class PaymentGateway implements PaymentGatewayInterface
             !preg_match('/^http(s)?:\/\/[a-z0-9-]+(.[a-z0-9-]+)+(:[0-9]+)?(\/.*)?$/i', $url) ||
             !filter_var($url, FILTER_VALIDATE_URL)
         ) {
-            throw new \Exception('invalid url ' . $url);
+            $this->error = 'invalid url format';
+            return false;
         }
         return true;
     }
@@ -299,16 +296,22 @@ class PaymentGateway implements PaymentGatewayInterface
      * validate the string
      *
      * @param $string
-     * @param $length
+     * @param $minLength
+     * @param $maxLength
      * @return bool
-     * @throws \Exception
      */
-    private function __validateString($string, $length = 0)
+    private function __validateString($string, $minLength = 1, $maxLength = 0)
     {
-        if (!is_string($string))
-            throw new \Exception('parameter is not string');
-        if ($length > 0 && strlen($string) > $length)
-            throw new \Exception('parameter is too long');
+        if (!is_string($string)) {
+            $this->error = 'parameter is not string';
+            return false;
+        } else if ($maxLength > 0 && strlen($string) > $maxLength) {
+            $this->error = 'parameter is too long';
+            return false;
+        } else if (strlen($string) < $minLength) {
+            $this->error = 'parameter is too short';
+            return false;
+        }
         return true;
     }
 
@@ -316,16 +319,22 @@ class PaymentGateway implements PaymentGatewayInterface
      * validate the integer
      *
      * @param $int
-     * @param $length
+     * @param $minLength
+     * @param $maxLength
      * @return bool
-     * @throws \Exception
      */
-    private function __validateInteger($int, $length = 0)
+    private function __validateInteger($int, $minLength = 1, $maxLength = 0)
     {
-        if (!is_int($int))
-            throw new \Exception('parameter is not integer');
-        if ($length > 0 && strlen($int) > $length)
-            throw new \Exception('parameter is too long');
+        if (!is_int($int)) {
+            $this->error = 'parameter is not integer';
+            return false;
+        } else if ($maxLength > 0 && strlen($int) > $maxLength) {
+            $this->error = 'parameter is too long';
+            return false;
+        } else if (strlen($int) < $minLength) {
+            $this->error = 'parameter is too short';
+            return false;
+        }
         return true;
     }
 
