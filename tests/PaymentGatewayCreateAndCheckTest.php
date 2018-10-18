@@ -26,15 +26,27 @@ class PaymentGatewayCreateAndCheck extends TestCase
     public function dataSet()
     {
         return $dataSet = array(
-            //Test create invoice and check invoice
+            //Test create invoice and check invoice with invoiceId
             array(
                 'apiBaseUrl' => $this->config->API_BASE_URL,
                 'apiKey' => $this->config->API_KEY,
                 'mobile' => $this->config->MOBILE,
                 'orderId' => (string)rand(),
                 'price' => 54166,
+                'withOrderId' => false,
                 'description' => 'test order',
-                'test' => 'Test create invoice and check invoice'
+                'test' => 'Test create invoice and check  with invoiceId'
+            ),
+            //Test create invoice and check invoice with orderId
+            array(
+                'apiBaseUrl' => $this->config->API_BASE_URL,
+                'apiKey' => $this->config->API_KEY,
+                'mobile' => $this->config->MOBILE,
+                'orderId' => (string)rand(),
+                'price' => 54166,
+                'withOrderId' => true,
+                'description' => 'test order',
+                'test' => 'Test create invoice and check invoice with orderId'
             )
         );
     }
@@ -59,13 +71,20 @@ class PaymentGatewayCreateAndCheck extends TestCase
 
                 $result = $payment->create($data['orderId'], $data['price'], $data['description']);
                 if ($result) {
-                    $invoice = $payment->check($result->id);
-                    $this->assertTrue(true);
+                    $invoice = $payment->check(
+                        $data['withOrderId'] ? $result->orderId : $result->id,
+                        $data['withOrderId']
+                    );
+                    if ($invoice)
+                        $this->assertTrue(true);
+                    else
+                        $this->assertTrue(false);
                 } else {
                     $this->assertTrue(false);
                 }
             } catch (\Exception $e) {
-                $this->assertTrue(false, 'dataSet number ' . $key . ' is not passed,' . $e->getMessage());
+                $this->assertTrue(false, 'dataSet "' . $data['test'] .
+                    '" is not passed,' . $e->getMessage() . ', ' . $payment->error);
             }
         }
 

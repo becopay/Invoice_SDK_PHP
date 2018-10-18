@@ -73,7 +73,7 @@ class PaymentGateway implements PaymentGatewayInterface
      * @return mixed bool | object
      * @throws \Exception
      */
-    public function create($orderId, $price, $description)
+    public function create($orderId, $price, $description = '')
     {
 
         // Clear the error variable
@@ -125,12 +125,14 @@ class PaymentGateway implements PaymentGatewayInterface
 
     /**
      * Check the payment status
+     * for check invoice status with orderId set $isOrderId value true
      *
      * @param string $invoiceId
+     * @param bool   $isOrderId
      * @return mixed
      * @throws \Exception
      */
-    public function check($invoiceId)
+    public function check($invoiceId, $isOrderId = false)
     {
         /*
          * Check value is string
@@ -138,14 +140,20 @@ class PaymentGateway implements PaymentGatewayInterface
          */
         self::__validateString($invoiceId, 50);
 
-        $param = array(
-            "id" => $invoiceId
-        );
+        if ($isOrderId)
+            $param = array(
+                "apiKey" => $this->apiKey,
+                "mob" => $this->mobile,
+                "id" => $invoiceId
+            );
+        else
+            $param = array(
+                "id" => $invoiceId
+            );
 
         // Clear the error variable
         $this->error = '';
-
-        $result = self::__sendRequest('invoice', 'GET', $param);
+        $result = self::__sendRequest($isOrderId?'invoice/byorderid':'invoice', 'GET', $param);
 
         // if response code is 200 return the response value
         if ($result->code === 200) {
@@ -158,8 +166,10 @@ class PaymentGateway implements PaymentGatewayInterface
             $this->error = $result->response;
             return false;
         } else { //Get error massage and return false
-            if (isset($result->response->description))
+            if (isset($result->response->description) && !is_null($result->response->description))
                 $this->error = $result->response->description;
+            else if (isset($result->response->message) && !is_null($result->response->message))
+                $this->error = $result->response->message;
             return false;
         }
     }
