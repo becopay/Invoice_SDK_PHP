@@ -102,7 +102,14 @@ Response
 For checking the invoice status you can use `check()` method.<br>
 If invalid data type is entered, throw an execption<br>
 If response is successful it will return object and if not, it will return false<br>
-`$payment->error` return the error message
+`$payment->error` return the error message<br>
+__Function paramter__
+```php
+check(
+$id, // Set the Becopay InvoiceId or own OrderId
+$isOrderId // If set OrderId , this parameter must be true (default: false)
+)
+```
 ```php
       /*
        * Use this function to check the invoice status.
@@ -117,7 +124,11 @@ try {
        * and use it to check the invoice status
        */
     
+      //Check invoice with InvoiceId
       $fetchedInvoice = $payment->check($invoiceId);
+      
+      //Check invoice with OrderId
+      // $fetchedInvoice = $payment->check($orderId,true);
       
       if($fetchedInvoice)
       {
