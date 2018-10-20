@@ -47,7 +47,7 @@ class PaymentGateway implements PaymentGatewayInterface
      */
     public function __construct($apiBaseUrl, $apiKey, $mobile)
     {
-        /*
+        /**
          * validate the url &&  Check value is string
          * If is invalid url or is not string value throw the exception
          */
@@ -70,7 +70,7 @@ class PaymentGateway implements PaymentGatewayInterface
      * @param  string | integer $orderId
      * @param integer           $price
      * @param string            $description
-     * @return mixed bool | object
+     * @return mixed  false|response object
      * @throws \Exception
      */
     public function create($orderId, $price, $description = '')
@@ -81,9 +81,9 @@ class PaymentGateway implements PaymentGatewayInterface
 
         $orderId = (string)$orderId;
 
-        /*
+        /**
          * Check value is string
-         * If string or integer is invalid throw the exception
+         * If string or integer is return false and set error message on error variable
          */
         if (
             !self::__validateString($orderId, 1, 50) ||
@@ -124,36 +124,76 @@ class PaymentGateway implements PaymentGatewayInterface
     }
 
     /**
+     * Check the payment status with invoice id
+     *
+     * @param string $invoiceId
+     * @return mixed false|response object
+     * @throws \Exception
+     */
+    public function check($invoiceId)
+    {
+        // Clear the error variable
+        $this->error = '';
+
+        /**
+         * Check value is string
+         * If string return false and set error message on error variable
+         */
+        if (
+        !self::__validateString($invoiceId, 1, 50)
+        )
+            return false;
+
+        $param = array(
+            "id" => $invoiceId
+        );
+
+        return self::__sendCheckRequest('invoice', $param);
+    }
+
+    /**
      * Check the payment status
      * for check invoice status with orderId set $isOrderId value true
      *
-     * @param string $invoiceId
-     * @param bool   $isOrderId
-     * @return mixed
+     * @param string $orderId
+     * @return mixed false|response object
      * @throws \Exception
      */
-    public function check($invoiceId, $isOrderId = false)
+    public function checkByOrderId($orderId)
     {
-        /*
-         * Check value is string
-         * If string is invalid throw the exception
-         */
-        self::__validateString($invoiceId, 50);
-
-        if ($isOrderId)
-            $param = array(
-                "apiKey" => $this->apiKey,
-                "mob" => $this->mobile,
-                "id" => $invoiceId
-            );
-        else
-            $param = array(
-                "id" => $invoiceId
-            );
-
         // Clear the error variable
         $this->error = '';
-        $result = self::__sendRequest($isOrderId?'invoice/byorderid':'invoice', 'GET', $param);
+
+        /**
+         * Check value is string
+         * If string return false and set error message on error variable
+         */
+        if (
+        !self::__validateString($orderId, 1, 50)
+        )
+            return false;
+
+        $param = array(
+            "apiKey" => $this->apiKey,
+            "mob" => $this->mobile,
+            "id" => $orderId
+        );
+
+        return self::__sendCheckRequest('invoice/byorderid', $param);
+    }
+
+
+    /**
+     * Send Check invoice request
+     *
+     * @param $path
+     * @param $param
+     * @return bool
+     * @throws \Exception
+     */
+    private function __sendCheckRequest($path, $param)
+    {
+        $result = self::__sendRequest($path, 'GET', $param);
 
         // if response code is 200 return the response value
         if ($result->code === 200) {
@@ -313,13 +353,13 @@ class PaymentGateway implements PaymentGatewayInterface
     private function __validateString($string, $minLength = 1, $maxLength = 0)
     {
         if (!is_string($string)) {
-            $this->error = 'parameter is not string';
+            $this->error = 'parameter is not string.';
             return false;
         } else if ($maxLength > 0 && strlen($string) > $maxLength) {
-            $this->error = 'parameter is too long';
+            $this->error = 'parameter is too long. string:' . $string;
             return false;
         } else if (strlen($string) < $minLength) {
-            $this->error = 'parameter is too short';
+            $this->error = 'parameter is too short. string:' . $string;
             return false;
         }
         return true;
@@ -339,10 +379,10 @@ class PaymentGateway implements PaymentGatewayInterface
             $this->error = 'parameter is not integer';
             return false;
         } else if ($maxLength > 0 && strlen($int) > $maxLength) {
-            $this->error = 'parameter is too long';
+            $this->error = 'parameter is too long. int:' . $int;
             return false;
         } else if (strlen($int) < $minLength) {
-            $this->error = 'parameter is too short';
+            $this->error = 'parameter is too short. int:' . $int;
             return false;
         }
         return true;

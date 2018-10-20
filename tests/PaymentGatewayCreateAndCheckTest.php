@@ -31,7 +31,7 @@ class PaymentGatewayCreateAndCheck extends TestCase
                 'apiBaseUrl' => $this->config->API_BASE_URL,
                 'apiKey' => $this->config->API_KEY,
                 'mobile' => $this->config->MOBILE,
-                'orderId' => (string)rand(),
+                'orderId' => (string)uniqid('test_'),
                 'price' => 54166,
                 'withOrderId' => false,
                 'description' => 'test order',
@@ -42,7 +42,7 @@ class PaymentGatewayCreateAndCheck extends TestCase
                 'apiBaseUrl' => $this->config->API_BASE_URL,
                 'apiKey' => $this->config->API_KEY,
                 'mobile' => $this->config->MOBILE,
-                'orderId' => (string)rand(),
+                'orderId' => (string)uniqid('test_'),
                 'price' => 54166,
                 'withOrderId' => true,
                 'description' => 'test order',
@@ -71,10 +71,11 @@ class PaymentGatewayCreateAndCheck extends TestCase
 
                 $result = $payment->create($data['orderId'], $data['price'], $data['description']);
                 if ($result) {
-                    $invoice = $payment->check(
-                        $data['withOrderId'] ? $result->orderId : $result->id,
-                        $data['withOrderId']
-                    );
+                    if ($data['withOrderId'])
+                        $invoice = $payment->checkByOrderId($result->orderId);
+                    else
+                        $invoice = $payment->check($result->id);
+
                     if ($invoice)
                         $this->assertTrue(true);
                     else
