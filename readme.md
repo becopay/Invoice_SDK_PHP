@@ -48,9 +48,9 @@ try {
      * This function is used to create an invoice.
      * Return result data type is object
 	 *
-	 *	Note: default value of `merchantCur`and `payerCur` currency is 'IRR'  
+	 *	Note: default value of `merchantCur`and `currency` currency is 'IRR'  
      */ 
-    $invoice = $payment->create('order id','price','description','merchantCur','payerCur');
+    $invoice = $payment->create('order id','price','description','currency','merchantCur');
     if($invoice)
     {
         /*

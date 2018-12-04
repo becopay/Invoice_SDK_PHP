@@ -31,11 +31,11 @@ interface PaymentGatewayInterface
      * @param  string | integer $orderId
      * @param integer           $price payer order price
      * @param string            $description
+     * @param string            $currency payer currency
      * @param string            $merchantCur merchant currency
-     * @param string            $payerCur payer currency
      * @return object
      */
-    public function create($orderId, $price, $description, $merchantCur, $payerCur);
+    public function create($orderId, $price, $description, $currency, $merchantCur);
 
     /**
      * Check the payment status with invoiceId

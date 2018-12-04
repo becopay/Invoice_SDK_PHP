@@ -69,13 +69,13 @@ class PaymentGateway implements PaymentGatewayInterface
      * @param  string | integer $orderId
      * @param integer           $price
      * @param string            $description
+     * @param string            $currency payer currency
      * @param string            $merchantCur merchant currency
-     * @param string            $payerCur payer currency
      *
      * @return mixed  false|response object
      * @throws \Exception
      */
-    public function create($orderId, $price, $description = '', $merchantCur = 'IRR', $payerCur = 'IRR')
+    public function create($orderId, $price, $description = '', $currency = 'IRR', $merchantCur = 'IRR')
     {
 
         // Clear the error variable
@@ -100,7 +100,7 @@ class PaymentGateway implements PaymentGatewayInterface
             "description" => $description,
             "orderId" => $orderId,
             "merchantCur" => $merchantCur,
-            "payerCur" => $payerCur,
+            "currency" => $currency,
             "price" => (string)$price
         );
 

@@ -121,6 +121,8 @@ class PaymentGatewayCreateTest extends TestCase
                 'mobile' => $this->config->MOBILE,
                 'orderId' => rand(),
                 'price' => 4166.4,
+                'merchantCur' => 'IRR',
+                'payerCur' => 'USD',
                 'description' => 'test order',
                 'isAssertion' => true,
                 'test' => 'Test create invoice with double price',
@@ -140,6 +142,13 @@ class PaymentGatewayCreateTest extends TestCase
                     'gatewayUrl' => 'string',
                     'callback' => 'string',
                     'orderId' => 'string',
+                ),
+                'validate' => array(
+                    'payerAmount' => 'price',
+                    'payerCur' => 'payerCur',
+                    'merchantCur' => 'merchantCur',
+                    'orderId' => 'orderId',
+                    'description' => 'description'
                 )
             ),
             //Test create invoice
@@ -149,6 +158,8 @@ class PaymentGatewayCreateTest extends TestCase
                 'mobile' => $this->config->MOBILE,
                 'orderId' => rand(),
                 'price' => 4166,
+                'merchantCur' => 'IRR',
+                'payerCur' => 'USD',
                 'description' => 'test order',
                 'isAssertion' => true,
                 'test' => 'Test create invoice',
@@ -168,6 +179,13 @@ class PaymentGatewayCreateTest extends TestCase
                     'gatewayUrl' => 'string',
                     'callback' => 'string',
                     'orderId' => 'string',
+                ),
+                'validate' => array(
+                    'payerAmount' => 'price',
+                    'payerCur' => 'payerCur',
+                    'merchantCur' => 'merchantCur',
+                    'orderId' => 'orderId',
+                    'description' => 'description'
                 )
             )
         );
@@ -190,7 +208,8 @@ class PaymentGatewayCreateTest extends TestCase
                     $data['mobile']
                 );
 
-                $result = $payment->create($data['orderId'], $data['price'], $data['description']);
+                $result = $payment->create($data['orderId'], $data['price'],
+                    $data['description'], $data['payerCur'], $data['merchantCur']);
 
                 if ($data['isAssertion'] && isset($data['response']) && $result) {
                     foreach ($data['response'] as $key => $value) {
@@ -202,6 +221,12 @@ class PaymentGatewayCreateTest extends TestCase
                                 ', "'.$key . '"  values is not ' . $value . ' on response'.
                                 ', type is '.gettype($result->$key));
                     }
+
+                    //check validate dataset
+                    foreach ($data['validate'] as $res_value => $req_value)
+                        if($result->$res_value != $data[$req_value])
+                            $this->assertTrue(false, 'dataSet "' . $data['test'] .
+                                ', "' . $res_value . '" response value is not same with request value');
                 }
                 echo "\n" . $key . ' : ' . $data['test'];
                 $this->assertTrue(!empty($result) == $data['isAssertion']);

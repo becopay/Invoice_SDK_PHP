@@ -34,7 +34,7 @@ class PaymentGatewayCreateAndCheck extends TestCase
                 'orderId' => (string)uniqid('test_'),
                 'price' => 15000,
                 'merchantCur' => 'IRR',
-                'payerCur' => 'IRR',
+                'payerCur' => 'USD',
                 'withOrderId' => false,
                 'description' => 'test order',
                 'test' => 'Test create invoice and check  with invoiceId',
@@ -52,6 +52,12 @@ class PaymentGatewayCreateAndCheck extends TestCase
                     'gatewayUrl' => 'string',
                     'callback' => 'string',
                     'orderId' => 'string',
+                ),
+                'validate' => array(
+                    'payerAmount' => 'price',
+                    'payerCur' => 'payerCur',
+                    'orderId' => 'orderId',
+                    'description' => 'description'
                 )
             ),
             //Test create invoice and check invoice with orderId
@@ -82,6 +88,13 @@ class PaymentGatewayCreateAndCheck extends TestCase
                     'gatewayUrl' => 'string',
                     'callback' => 'string',
                     'orderId' => 'string',
+                ),
+                'validate' => array(
+                    'payerAmount' => 'price',
+                    'payerCur' => 'payerCur',
+                    'merchantCur' => 'merchantCur',
+                    'orderId' => 'orderId',
+                    'description' => 'description'
                 )
             )
         );
@@ -106,7 +119,7 @@ class PaymentGatewayCreateAndCheck extends TestCase
                 echo "\n" . $key . ' : ' . $data['test'];
 
                 $result = $payment->create($data['orderId'], $data['price'],
-                    $data['description'], $data['merchantCur'], $data['payerCur']);
+                    $data['description'], $data['payerCur'], $data['merchantCur']);
                 if ($result) {
                     if ($data['withOrderId'])
                         $invoice = $payment->checkByOrderId($result->orderId);
@@ -114,17 +127,23 @@ class PaymentGatewayCreateAndCheck extends TestCase
                         $invoice = $payment->check($result->id);
 
                     if ($invoice) {
+                        //check response dataset
                         foreach ($data['response'] as $res_key => $res_value) {
                             if (!isset($invoice->$res_key))
                                 $this->assertTrue(false, 'dataSet "' . $data['test'] .
                                     ', undefined "' . $res_key . '" on response');
                             else if (!empty($res_value) && gettype($invoice->$res_key) != $res_value)
                                 $this->assertTrue(false, 'dataSet "' . $data['test'] .
-                                    ', "'.$res_key . '"  values is not ' . $res_value . ' on response'.
-                                    ', type is '.gettype($invoice->$res_key));
+                                    ', "' . $res_key . '"  values is not ' . $res_value . ' on response' .
+                                    ', type is ' . gettype($invoice->$res_key));
                         }
-                    }
-                    else
+
+                        //check validate dataset
+                        foreach ($data['validate'] as $res_value => $req_value)
+                            if($invoice->$res_value != $data[$req_value])
+                                $this->assertTrue(false, 'dataSet "' . $data['test'] .
+                                    ', "' . $res_value . '" response value is not same with request value');
+                    } else
                         $this->assertTrue(false);
                 } else {
                     $this->assertTrue(false);
