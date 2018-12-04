@@ -382,13 +382,13 @@ class PaymentGateway implements PaymentGatewayInterface
     private function __validateNumeric($int, $minLength = 1, $maxLength = 0)
     {
         if (!is_numeric($int)) {
-            $this->error = 'parameter is not integer';
+            $this->error = 'parameter is not number';
             return false;
         } else if ($maxLength > 0 && strlen($int) > $maxLength) {
-            $this->error = 'parameter is too long. int:' . $int;
+            $this->error = 'parameter is too long. number:' . $int;
             return false;
         } else if (strlen($int) < $minLength) {
-            $this->error = 'parameter is too short. int:' . $int;
+            $this->error = 'parameter is too short. number:' . $int;
             return false;
         }
         return true;
