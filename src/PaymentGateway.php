@@ -1,7 +1,7 @@
 <?php
 /**
  * User: Becopay Team
- * Version 1.0.1
+ * Version 1.1.0
  * Date: 10/10/18
  * Time: 10:36 AM
  */
@@ -12,7 +12,7 @@ namespace Becopay;
 /**
  * Class PaymentGateway
  *
- * @package Becopay\Gateway
+ * @package Becopay
  */
 class PaymentGateway implements PaymentGatewayInterface
 {
@@ -30,7 +30,6 @@ class PaymentGateway implements PaymentGatewayInterface
      * @var string merchant mobile number
      */
     private $mobile;
-
 
     /**
      * @var string error message
@@ -70,10 +69,13 @@ class PaymentGateway implements PaymentGatewayInterface
      * @param  string | integer $orderId
      * @param integer           $price
      * @param string            $description
+     * @param string            $merchantCur merchant currency
+     * @param string            $payerCur payer currency
+     *
      * @return mixed  false|response object
      * @throws \Exception
      */
-    public function create($orderId, $price, $description = '')
+    public function create($orderId, $price, $description = '', $merchantCur = 'IRR', $payerCur = 'IRR')
     {
 
         // Clear the error variable
@@ -83,11 +85,11 @@ class PaymentGateway implements PaymentGatewayInterface
 
         /**
          * Check value is string
-         * If string or integer is return false and set error message on error variable
+         * If validation functions return false, it will be set error message on error variable
          */
         if (
             !self::__validateString($orderId, 1, 50) ||
-            !self::__validateInteger($price, 1, 20) ||
+            !self::__validateNumeric($price, 1, 20) ||
             !self::__validateString($description, 0, 255)
         )
             return false;
@@ -97,6 +99,8 @@ class PaymentGateway implements PaymentGatewayInterface
             "mobile" => $this->mobile,
             "description" => $description,
             "orderId" => $orderId,
+            "merchantCur" => $merchantCur,
+            "payerCur" => $payerCur,
             "price" => (string)$price
         );
 
@@ -145,7 +149,9 @@ class PaymentGateway implements PaymentGatewayInterface
             return false;
 
         $param = array(
-            "id" => $invoiceId
+            "id" => $invoiceId,
+            "apikey" => $this->apiKey,
+            "mobile" => $this->mobile
         );
 
         return self::__sendCheckRequest('invoice', $param);
@@ -366,16 +372,16 @@ class PaymentGateway implements PaymentGatewayInterface
     }
 
     /**
-     * validate the integer
+     * validate variable is a number or a numeric string
      *
      * @param $int
      * @param $minLength
      * @param $maxLength
      * @return bool
      */
-    private function __validateInteger($int, $minLength = 1, $maxLength = 0)
+    private function __validateNumeric($int, $minLength = 1, $maxLength = 0)
     {
-        if (!is_int($int)) {
+        if (!is_numeric($int)) {
             $this->error = 'parameter is not integer';
             return false;
         } else if ($maxLength > 0 && strlen($int) > $maxLength) {
